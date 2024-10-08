@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class UserController {
     private final UserMapper userMapper;
 
-    @GetMapping("path")
+    @GetMapping(PathConstants.SEARCH_USERNAME)
     public ResponseEntity<List<UserResponse>> searchUsersByUsername(
             @PathVariable("username") String username,
             @PageableDefault(size = 15) Pageable pageable) {

@@ -156,27 +156,18 @@ public class User {
     private Set<User> userBlockedList = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscriber_id"))
+    @JoinTable(name = "user_subscriptions", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subscriber_id"))
     private Set<User> followers = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "subscriber_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "user_subscriptions", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> following = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "user_follower_requests",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    @JoinTable(name = "user_follower_requests", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private Set<User> followerRequests = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "subscribers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscriber_id"))
+    @JoinTable(name = "subscribers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subscriber_id"))
     private Set<User> subscribers = new HashSet<>();
-
 }
