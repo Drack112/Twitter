@@ -1,5 +1,7 @@
 package com.gmail.drack.commons.configuration;
 
+import static com.gmail.drack.commons.constants.PathConstants.PAGE_TOTAL_COUNT;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -8,16 +10,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import static com.gmail.drack.commons.constants.PathConstants.PAGE_TOTAL_COUNT;
-
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
+
     @Value("${hostname}")
     private String hostname;
 
     @Bean
     @LoadBalanced
-    public RestTemplate gRestTemplate() {
+    public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
 
