@@ -18,8 +18,9 @@
 
     <modules>
         <module>commons</module>
-        <module>user-service</module>
+        <module>eureka-service</module>
         <module>config-service</module>
+        <module>user-service</module>
     </modules>
 
     <properties>
