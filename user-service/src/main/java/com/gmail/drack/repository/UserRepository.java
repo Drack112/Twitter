@@ -11,15 +11,17 @@ import com.gmail.drack.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
-    @Query("""
-            SELECT CASE WHEN count(followerRequest) > 0 THEN true ELSE false END FROM User user
-            LEFT JOIN user.followerRequests followerRequest
-            WHERE user.id = :userId
-            AND followerRequest.id = :authUserId
-            """)
-    boolean isMyProfileWaitingForApprove(@Param("userId") Long userId, @Param("authUserId") Long authUserId);
-
     @Query("SELECT user FROM User user WHERE user.email = :email")
     <T> Optional<T> getUserByEmail(@Param("email") String email, Class<T> type);
+
+    @Query("SELECT user FROM User user WHERE user.id = :userId")
+    <T> Optional<T> getUserById(@Param("userId") Long userId, Class<T> type);
+
+    @Query("""
+        SELECT CASE WHEN count(followerRequest) > 0 THEN true ELSE false END FROM User user
+        LEFT JOIN user.followerRequests followerRequest
+        WHERE user.id = :userId
+        AND followerRequest.id = :authUserId
+        """)
+    boolean isMyProfileWaitingForApprove(@Param("userId") Long userId, @Param("authUserId") Long authUserId);
 }

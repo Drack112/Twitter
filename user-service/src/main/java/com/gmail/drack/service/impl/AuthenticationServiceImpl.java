@@ -7,9 +7,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.gmail.drack.commons.constants.PathConstants;
-import com.gmail.drack.commons.dto.response.user.UserPrincipalResponse;
 import com.gmail.drack.commons.exceptions.ApiRequestException;
 import com.gmail.drack.constants.UserErrorMessage;
+import com.gmail.drack.repository.UserPrincipalProjection;
 import com.gmail.drack.repository.UserRepository;
 import com.gmail.drack.service.AuthenticationService;
 
@@ -28,9 +28,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
-    public UserPrincipalResponse getUserPrincipalByEmail(String email) {
-        return userRepository.getUserByEmail(email, UserPrincipalResponse.class)
-        .orElseThrow(() -> new ApiRequestException(UserErrorMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+    public UserPrincipalProjection getUserPrincipalByEmail(String email) {
+        return userRepository.getUserByEmail(email, UserPrincipalProjection.class)
+                .orElseThrow(() -> new ApiRequestException(UserErrorMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     private Long getUserId() {

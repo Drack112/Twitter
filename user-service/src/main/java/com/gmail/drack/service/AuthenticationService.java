@@ -1,8 +1,8 @@
 package com.gmail.drack.service;
 
-import com.gmail.drack.commons.dto.response.user.UserPrincipalResponse;
+import com.gmail.drack.repository.UserPrincipalProjection;
 
 public interface AuthenticationService {
     Long getAuthenticatedUserId();   
-    UserPrincipalResponse getUserPrincipalByEmail(String email);
+    UserPrincipalProjection getUserPrincipalByEmail(String email);
 }
