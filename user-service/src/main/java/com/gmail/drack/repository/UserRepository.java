@@ -1,5 +1,6 @@
 package com.gmail.drack.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.gmail.drack.model.User;
+import com.gmail.drack.repository.projection.NotificationUserProjection;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -24,4 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
         AND followerRequest.id = :authUserId
         """)
     boolean isMyProfileWaitingForApprove(@Param("userId") Long userId, @Param("authUserId") Long authUserId);
+
+    @Query("""
+        SELECT user FROM User user
+        LEFT JOIN user.subscribers subscriber
+        WHERE subscriber.id = :userId
+        """)
+    List<NotificationUserProjection> getUsersWhichUserSubscribed(@Param("userId") Long userId);
 }
