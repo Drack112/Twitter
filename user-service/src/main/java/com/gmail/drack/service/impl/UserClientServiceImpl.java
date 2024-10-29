@@ -1,13 +1,17 @@
 package com.gmail.drack.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.gmail.drack.commons.dto.response.notification.NotificationUserResponse;
 import com.gmail.drack.commons.dto.response.user.UserResponse;
+import com.gmail.drack.commons.event.UpdateUserEvent;
 import com.gmail.drack.commons.mapper.BasicMapper;
 import com.gmail.drack.commons.utils.AuthUtil;
+import com.gmail.drack.model.User;
 import com.gmail.drack.repository.UserRepository;
 import com.gmail.drack.repository.projection.NotificationUserProjection;
 import com.gmail.drack.repository.projection.UserProjection;
@@ -41,4 +45,11 @@ public class UserClientServiceImpl implements UserClientService {
         return userRepository.getUserIdsWhichUserSubscribed(authUserId);
     }
 
+    @Override
+    public List<UpdateUserEvent> getBatchUsers(Integer period, Integer page, Integer limit) {
+        LocalDateTime sinceDate = LocalDateTime.now().minusDays(period);
+        PageRequest pageable = PageRequest.of(page, limit);
+        List<User> users = userRepository.findByRegistrationAndUpdatedDate(sinceDate, pageable);
+        return basicMapper.convertToResponseList(users, UpdateUserEvent.class);
+    }
 }

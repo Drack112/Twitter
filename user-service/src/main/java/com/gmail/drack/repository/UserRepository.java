@@ -1,8 +1,10 @@
 package com.gmail.drack.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,4 +42,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
         WHERE subscriber.id = :userId
         """)
     List<Long> getUserIdsWhichUserSubscribed(@Param("userId") Long userId);
+
+    @Query("""
+            SELECT user FROM User user
+            WHERE user.registrationDate >= :sinceDate
+            OR user.updatedAt >= :sinceDate
+            """)
+    List<User> findByRegistrationAndUpdatedDate(LocalDateTime sinceDate, Pageable pageable);
 }
