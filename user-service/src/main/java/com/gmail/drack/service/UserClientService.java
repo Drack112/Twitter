@@ -8,4 +8,5 @@ import com.gmail.drack.commons.dto.response.user.UserResponse;
 public interface UserClientService {
     UserResponse getUserResponseById(Long userId);
     List<NotificationUserResponse> getUsersWhichUsersSubscribed();
+    List<Long> getUserIdsWhichUserSubscribed();
 }

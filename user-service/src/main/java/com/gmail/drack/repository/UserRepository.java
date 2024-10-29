@@ -33,4 +33,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
         WHERE subscriber.id = :userId
         """)
     List<NotificationUserProjection> getUsersWhichUserSubscribed(@Param("userId") Long userId);
+
+    @Query("""
+        SELECT user.id FROM User user
+        LEFT JOIN user.subscribers subscriber
+        WHERE subscriber.id = :userId
+        """)
+    List<Long> getUserIdsWhichUserSubscribed(@Param("userId") Long userId);
 }

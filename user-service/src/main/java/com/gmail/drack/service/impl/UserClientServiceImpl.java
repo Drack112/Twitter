@@ -35,4 +35,10 @@ public class UserClientServiceImpl implements UserClientService {
         return basicMapper.convertToResponseList(users, NotificationUserResponse.class);
     }
 
+    @Override
+    public List<Long> getUserIdsWhichUserSubscribed() {
+        Long authUserId = AuthUtil.getAuthenticatedUserId();
+        return userRepository.getUserIdsWhichUserSubscribed(authUserId);
+    }
+
 }

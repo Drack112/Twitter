@@ -33,4 +33,8 @@ public class UserApiController {
         return userService.getUsersWhichUsersSubscribed();
     }
 
+    @GetMapping(PathConstants.SUBSCRIBERS_IDS)
+    public List<Long> getUserIdsWhichUserSubscribed() {
+        return userService.getUserIdsWhichUserSubscribed();
+    }
 }
