@@ -23,6 +23,10 @@ public class AuthenticationMapper {
         return getAuthenticationResponse(authenticationService.login(request, result));
     }
 
+    public String getExistingEmail(String email, BindingResult bindingResult) {
+        return authenticationService.getExistingEmail(email, bindingResult);
+    }
+
     AuthenticationResponse getAuthenticationResponse(Map<String, Object> credentials) {
         AuthenticationResponse response = new AuthenticationResponse();
         response.setUser(modelMapper.map(credentials.get("user"), AuthUserResponse.class));

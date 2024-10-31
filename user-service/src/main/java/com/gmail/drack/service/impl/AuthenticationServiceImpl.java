@@ -13,11 +13,13 @@ import com.gmail.drack.commons.constants.PathConstants;
 import com.gmail.drack.commons.exceptions.ApiRequestException;
 import com.gmail.drack.commons.security.JwtProvider;
 import com.gmail.drack.constants.UserErrorMessage;
+import com.gmail.drack.constants.UserSuccessMessage;
 import com.gmail.drack.dto.request.AuthenticationRequest;
 import com.gmail.drack.model.UserRole;
 import com.gmail.drack.repository.UserPrincipalProjection;
 import com.gmail.drack.repository.UserRepository;
 import com.gmail.drack.repository.projection.AuthUserProjection;
+import com.gmail.drack.repository.projection.UserCommonProjection;
 import com.gmail.drack.service.AuthenticationService;
 import com.gmail.drack.service.utils.UserServiceHelper;
 
@@ -56,5 +58,14 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         .orElseThrow(() -> new ApiRequestException(UserErrorMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));   
         String token = jwtProvider.createToken(user.getEmail(), UserRole.USER.name());
         return Map.of("user", user, "token", token);     
+    }
+
+    @Override
+    public String getExistingEmail(String email, BindingResult result) {
+        userServiceHelper.processInputErrors(result);
+        userRepository.getUserByEmail(email, UserCommonProjection.class)
+        .orElseThrow(() -> new ApiRequestException(UserErrorMessage.EMAIL_NOT_FOUND, HttpStatus.NOT_FOUND));
+        
+        return UserSuccessMessage.RESET_PASSWORD_CODE_IS_SEND;
     }
 }

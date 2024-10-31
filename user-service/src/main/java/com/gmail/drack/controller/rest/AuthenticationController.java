@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gmail.drack.commons.constants.PathConstants;
 import com.gmail.drack.dto.request.AuthenticationRequest;
+import com.gmail.drack.dto.request.ProcessEmailRequest;
 import com.gmail.drack.dto.response.AuthenticationResponse;
 import com.gmail.drack.mapper.AuthenticationMapper;
 
@@ -29,5 +30,10 @@ public class AuthenticationController {
         BindingResult result
     ) {
         return ResponseEntity.ok(authenticationMapper.login(request, result));
+    }
+    
+    @PostMapping(PathConstants.FORGOT_EMAIL)
+    public ResponseEntity<String> getExistingEmail(@Valid @RequestBody ProcessEmailRequest request, BindingResult result) {
+        return ResponseEntity.ok(authenticationMapper.getExistingEmail(request.getEmail(), result));
     }
 }
