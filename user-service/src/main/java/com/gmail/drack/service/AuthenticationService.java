@@ -12,4 +12,5 @@ public interface AuthenticationService {
     UserPrincipalProjection getUserPrincipalByEmail(String email);
     Map<String, Object> login(AuthenticationRequest request, BindingResult result);
     String getExistingEmail(String email, BindingResult result);
+    String sendPasswordResetCode(String email, BindingResult result);
 }

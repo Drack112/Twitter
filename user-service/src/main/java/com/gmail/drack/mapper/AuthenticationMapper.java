@@ -27,6 +27,10 @@ public class AuthenticationMapper {
         return authenticationService.getExistingEmail(email, bindingResult);
     }
 
+    public String sendPasswordResetCode(String email, BindingResult bindingResult) {
+        return authenticationService.sendPasswordResetCode(email, bindingResult);
+    }
+
     AuthenticationResponse getAuthenticationResponse(Map<String, Object> credentials) {
         AuthenticationResponse response = new AuthenticationResponse();
         response.setUser(modelMapper.map(credentials.get("user"), AuthUserResponse.class));

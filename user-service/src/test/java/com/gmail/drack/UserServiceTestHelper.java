@@ -3,7 +3,6 @@ package com.gmail.drack;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
@@ -15,7 +14,6 @@ import com.gmail.drack.repository.projection.UserCommonProjection;
 public class UserServiceTestHelper {
 
     private static final ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
-    private static final PageRequest pageable = PageRequest.of(0, 20);
 
     public static NotificationUserProjection createNotificationUserProjection() {
         return factory.createProjection(

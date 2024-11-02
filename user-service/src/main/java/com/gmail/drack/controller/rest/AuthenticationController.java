@@ -36,4 +36,13 @@ public class AuthenticationController {
     public ResponseEntity<String> getExistingEmail(@Valid @RequestBody ProcessEmailRequest request, BindingResult result) {
         return ResponseEntity.ok(authenticationMapper.getExistingEmail(request.getEmail(), result));
     }
+
+    @PostMapping(PathConstants.FORGOT)
+    public ResponseEntity<String> sendPasswordResetCode(
+        @Valid
+        @RequestBody ProcessEmailRequest request,
+        BindingResult bindingResult
+    ) {
+        return ResponseEntity.ok(authenticationMapper.sendPasswordResetCode(request.getEmail(), bindingResult));
+    }
 }

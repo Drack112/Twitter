@@ -1,6 +1,7 @@
 package com.gmail.drack.service.impl;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.gmail.drack.broker.producer.SendEmailProducer;
 import com.gmail.drack.commons.constants.PathConstants;
+import com.gmail.drack.commons.event.SendEmailEvent;
 import com.gmail.drack.commons.exceptions.ApiRequestException;
 import com.gmail.drack.commons.security.JwtProvider;
 import com.gmail.drack.constants.UserErrorMessage;
@@ -24,15 +27,17 @@ import com.gmail.drack.service.AuthenticationService;
 import com.gmail.drack.service.utils.UserServiceHelper;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final UserServiceHelper userServiceHelper;
     private final JwtProvider jwtProvider;
+    private final SendEmailProducer sendEmailProducer;
 
     @Override
     public Long getAuthenticatedUserId() {
@@ -46,8 +51,11 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     private Long getUserId() {
-        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = ((ServletRequestAttributes) attributes).getRequest();
+        RequestAttributes attribs = RequestContextHolder.getRequestAttributes();
+
+        @SuppressWarnings("null")
+        HttpServletRequest request = ((ServletRequestAttributes) attribs).getRequest();
+
         return Long.parseLong(request.getHeader(PathConstants.AUTH_USER_ID_HEADER));
     }
 
@@ -65,7 +73,20 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         userServiceHelper.processInputErrors(result);
         userRepository.getUserByEmail(email, UserCommonProjection.class)
         .orElseThrow(() -> new ApiRequestException(UserErrorMessage.EMAIL_NOT_FOUND, HttpStatus.NOT_FOUND));
-        
         return UserSuccessMessage.RESET_PASSWORD_CODE_IS_SEND;
     }
+
+    @Override
+    @Transactional
+    public String sendPasswordResetCode(String email, BindingResult bindingResult) {
+        userServiceHelper.processInputErrors(bindingResult);
+        UserCommonProjection user = userRepository.getUserByEmail(email, UserCommonProjection.class)
+                .orElseThrow(() -> new ApiRequestException(UserErrorMessage.EMAIL_NOT_FOUND, HttpStatus.NOT_FOUND));
+        userRepository.updatePasswordResetCode(UUID.randomUUID().toString().substring(0, 7), user.getId());
+        String passwordResetCode = userRepository.getPasswordResetCode(user.getId());
+        SendEmailEvent sendEmailEvent = SendEmailProducer.toSendPasswordResetEmailEvent(user.getEmail(), user.getFullName(), passwordResetCode);
+        sendEmailProducer.sendEmail(sendEmailEvent);
+        return UserSuccessMessage.RESET_PASSWORD_CODE_IS_SEND;
+    }
+
 }
