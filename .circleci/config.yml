@@ -1,0 +1,27 @@
+version: 2.1
+
+executors:
+  maven-executor:
+    docker:
+      - image: maven:3.8.6-jdk-17
+    working_directory: ~/repo
+
+jobs:
+  build:
+    executor: maven-executor
+    steps:
+      - checkout
+
+      - run:
+          name: Instalar dependências e construir o projeto
+          command: mvn clean install
+
+      - run:
+          name: Executar testes
+          command: mvn test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
