@@ -14,7 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthUtil {
     public static Long getAuthenticatedUserId() {
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+
+        @SuppressWarnings("null")
         HttpServletRequest request = ((ServletRequestAttributes) attributes).getRequest();
+        
         String userID = request.getHeader(PathConstants.AUTH_USER_ID_HEADER);
 
         if(userID == null) {
