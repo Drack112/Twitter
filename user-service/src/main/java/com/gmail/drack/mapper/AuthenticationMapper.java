@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import com.gmail.drack.dto.request.AuthenticationRequest;
+import com.gmail.drack.dto.request.PasswordResetRequest;
 import com.gmail.drack.dto.response.AuthUserResponse;
 import com.gmail.drack.dto.response.AuthenticationResponse;
 import com.gmail.drack.repository.projection.AuthUserProjection;
@@ -42,5 +43,9 @@ public class AuthenticationMapper {
         response.setUser(modelMapper.map(credentials.get("user"), AuthUserResponse.class));
         response.setToken((String) credentials.get("token"));
         return response;
+    }
+
+    public String passwordReset(PasswordResetRequest request, BindingResult bindingResult) {
+        return authenticationService.passwordReset(request.getEmail(), request.getPassword(), request.getPassword2(), bindingResult);
     }
 }

@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestAttributes;
@@ -18,6 +19,7 @@ import com.gmail.drack.commons.security.JwtProvider;
 import com.gmail.drack.constants.UserErrorMessage;
 import com.gmail.drack.constants.UserSuccessMessage;
 import com.gmail.drack.dto.request.AuthenticationRequest;
+import com.gmail.drack.exception.InputFieldException;
 import com.gmail.drack.model.UserRole;
 import com.gmail.drack.repository.UserPrincipalProjection;
 import com.gmail.drack.repository.UserRepository;
@@ -38,6 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserServiceHelper userServiceHelper;
     private final JwtProvider jwtProvider;
     private final SendEmailProducer sendEmailProducer;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Long getAuthenticatedUserId() {
@@ -95,4 +98,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .orElseThrow(() -> new ApiRequestException(UserErrorMessage.INVALID_PASSWORD_RESET_CODE, HttpStatus.BAD_REQUEST));
     }
 
+    @Override
+    @Transactional
+    public String passwordReset(String email, String password, String password2, BindingResult result) {
+        userServiceHelper.processInputErrors(result);
+        checkMatchPasswords(password, password);
+        UserCommonProjection user = userRepository.getUserByEmail(email, UserCommonProjection.class)
+        .orElseThrow(() -> new InputFieldException(HttpStatus.NOT_FOUND, Map.of("email", UserErrorMessage.EMAIL_NOT_FOUND)));
+        userRepository.updatePassword(passwordEncoder.encode(password), user.getId());
+        userRepository.updatePasswordResetCode(null, user.getId());
+        return UserSuccessMessage.PASSWORD_SUCCESSFULLY_CHANGED;
+    }
+
+    private void checkMatchPasswords(String password, String password2) {
+        if(password == null || !password.equals(password2)) {
+            processPasswordException("password", UserErrorMessage.PASSWORDS_NOT_MATCH, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void processPasswordException(String paramName, String exceptionMessage, HttpStatus status) {
+        throw new InputFieldException(status, Map.of(paramName, exceptionMessage));
+    }
 }

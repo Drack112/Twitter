@@ -15,4 +15,5 @@ public interface AuthenticationService {
     String getExistingEmail(String email, BindingResult result);
     String sendPasswordResetCode(String email, BindingResult result);
     AuthUserProjection getUserByPasswordResetCode(String code);
+    String passwordReset(String email, String password, String password2, BindingResult result);
 }
