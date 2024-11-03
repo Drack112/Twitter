@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import com.gmail.drack.dto.request.AuthenticationRequest;
 import com.gmail.drack.dto.response.AuthUserResponse;
 import com.gmail.drack.dto.response.AuthenticationResponse;
+import com.gmail.drack.repository.projection.AuthUserProjection;
 import com.gmail.drack.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,11 @@ public class AuthenticationMapper {
 
     public String sendPasswordResetCode(String email, BindingResult bindingResult) {
         return authenticationService.sendPasswordResetCode(email, bindingResult);
+    }
+
+    public AuthUserResponse getUserByPasswordResetCode(String code) {
+        AuthUserProjection user = authenticationService.getUserByPasswordResetCode(code);
+        return modelMapper.map(user, AuthUserResponse.class);
     }
 
     AuthenticationResponse getAuthenticationResponse(Map<String, Object> credentials) {

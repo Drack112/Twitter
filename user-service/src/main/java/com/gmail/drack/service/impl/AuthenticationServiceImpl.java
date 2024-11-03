@@ -89,4 +89,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return UserSuccessMessage.RESET_PASSWORD_CODE_IS_SEND;
     }
 
+    @Override
+    public AuthUserProjection getUserByPasswordResetCode(String code) {
+        return userRepository.getByPasswordResetCode(code)
+        .orElseThrow(() -> new ApiRequestException(UserErrorMessage.INVALID_PASSWORD_RESET_CODE, HttpStatus.BAD_REQUEST));
+    }
+
 }

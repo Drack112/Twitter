@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 
 import com.gmail.drack.dto.request.AuthenticationRequest;
 import com.gmail.drack.repository.UserPrincipalProjection;
+import com.gmail.drack.repository.projection.AuthUserProjection;
 
 public interface AuthenticationService {
     Long getAuthenticatedUserId();   
@@ -13,4 +14,5 @@ public interface AuthenticationService {
     Map<String, Object> login(AuthenticationRequest request, BindingResult result);
     String getExistingEmail(String email, BindingResult result);
     String sendPasswordResetCode(String email, BindingResult result);
+    AuthUserProjection getUserByPasswordResetCode(String code);
 }

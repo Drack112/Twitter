@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.gmail.drack.model.User;
+import com.gmail.drack.repository.projection.AuthUserProjection;
 import com.gmail.drack.repository.projection.NotificationUserProjection;
 
 @Repository
@@ -76,4 +77,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
         AND subscriber.id = :subscriberUserId
         """)
     boolean isMyProfileSubscribed(@Param("userId") Long userId, @Param("subscriberUserId") Long subscriberUserId);
-}
+
+    @Query("SELECT user FROM User user WHERE user.passwordResetCode = :code")
+    Optional<AuthUserProjection> getByPasswordResetCode(@Param("code") String code);
+}   
