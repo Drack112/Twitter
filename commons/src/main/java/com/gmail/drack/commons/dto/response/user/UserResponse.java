@@ -12,6 +12,9 @@ public class UserResponse {
     private String about;
     private String avatar;
 
+    @JsonProperty("isPrivateProfile")
+    private boolean privateProfile;
+
     @JsonProperty("isMutedDirectMessages")
     private boolean isMutedDirectMessages;
 
