@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gmail.drack.commons.constants.PathConstants;
 import com.gmail.drack.dto.request.AuthenticationRequest;
+import com.gmail.drack.dto.request.CurrentPasswordResetRequest;
 import com.gmail.drack.dto.request.PasswordResetRequest;
 import com.gmail.drack.dto.request.ProcessEmailRequest;
 import com.gmail.drack.dto.response.AuthUserResponse;
@@ -62,5 +63,14 @@ public class AuthenticationController {
         BindingResult bindingResult
     ) {
         return ResponseEntity.ok(authenticationMapper.passwordReset(request, bindingResult));
+    }
+
+    @PostMapping(PathConstants.RESET_CURRENT)
+    public ResponseEntity<String> currentPasswordReset(
+        @Valid
+        @RequestBody CurrentPasswordResetRequest request,
+        BindingResult bindingResult
+    ) {
+        return ResponseEntity.ok(authenticationMapper.currentPasswordReset(request, bindingResult));
     }
 }
