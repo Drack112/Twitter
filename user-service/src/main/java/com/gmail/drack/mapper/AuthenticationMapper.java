@@ -44,7 +44,8 @@ public class AuthenticationMapper {
     }
 
     public String currentPasswordReset(CurrentPasswordResetRequest request, BindingResult bindingResult) {
-        return authenticationService.currentPasswordReset(request.getCurrentPassword(), request.getPassword(), request.getPassword2(), bindingResult);
+        return authenticationService.currentPasswordReset(request.getCurrentPassword(), request.getPassword(),
+                request.getPassword2(), bindingResult);
     }
 
     AuthenticationResponse getAuthenticationResponse(Map<String, Object> credentials) {

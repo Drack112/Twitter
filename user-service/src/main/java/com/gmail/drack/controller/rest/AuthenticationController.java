@@ -57,20 +57,12 @@ public class AuthenticationController {
     }
 
     @PostMapping(PathConstants.RESET)
-    public ResponseEntity<String> passwordReset(
-        @Valid
-        @RequestBody PasswordResetRequest request,
-        BindingResult bindingResult
-    ) {
+    public ResponseEntity<String> passwordReset(@Valid @RequestBody PasswordResetRequest request, BindingResult bindingResult) {
         return ResponseEntity.ok(authenticationMapper.passwordReset(request, bindingResult));
     }
 
     @PostMapping(PathConstants.RESET_CURRENT)
-    public ResponseEntity<String> currentPasswordReset(
-        @Valid
-        @RequestBody CurrentPasswordResetRequest request,
-        BindingResult bindingResult
-    ) {
+    public ResponseEntity<String> currentPasswordReset(@Valid @RequestBody CurrentPasswordResetRequest request, BindingResult bindingResult) {
         return ResponseEntity.ok(authenticationMapper.currentPasswordReset(request, bindingResult));
     }
 }

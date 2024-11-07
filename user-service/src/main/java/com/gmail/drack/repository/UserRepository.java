@@ -52,10 +52,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """)
     List<User> findByRegistrationAndUpdatedDate(LocalDateTime sinceDate, Pageable pageable);
 
-    @Modifying
-    @Query("UPDATE User user SET user.passwordResetCode = :passwordResetCode WHERE user.id = :userId")
-    void updatePasswordResetCode(@Param("passwordResetCode") String passwordResetCode, @Param("userId") Long userId);
-
     @Query("SELECT user.passwordResetCode FROM User user WHERE user.id = :userId")
     String getPasswordResetCode(@Param("userId") Long userId);
 
@@ -81,6 +77,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT user FROM User user WHERE user.passwordResetCode = :code")
     Optional<AuthUserProjection> getByPasswordResetCode(@Param("code") String code);
     
+    @Modifying
+    @Query("UPDATE User user SET user.passwordResetCode = :passwordResetCode WHERE user.id = :userId")
+    void updatePasswordResetCode(@Param("passwordResetCode") String passwordResetCode, @Param("userId") Long userId);
+
     @Modifying
     @Query("UPDATE User user SET user.password = :password WHERE user.id = :userId")
     void updatePassword(@Param("password") String password, @Param("userId") Long userId);

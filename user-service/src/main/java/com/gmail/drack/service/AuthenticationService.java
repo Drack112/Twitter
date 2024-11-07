@@ -5,16 +5,20 @@ import java.util.Map;
 import org.springframework.validation.BindingResult;
 
 import com.gmail.drack.dto.request.AuthenticationRequest;
-import com.gmail.drack.repository.UserPrincipalProjection;
+import com.gmail.drack.model.User;
 import com.gmail.drack.repository.projection.AuthUserProjection;
+import com.gmail.drack.repository.projection.UserPrincipalProjection;
+
 
 public interface AuthenticationService {
-    Long getAuthenticatedUserId();   
+    Long getAuthenticatedUserId();
+    User getAuthenticatedUser();
     UserPrincipalProjection getUserPrincipalByEmail(String email);
-    Map<String, Object> login(AuthenticationRequest request, BindingResult result);
-    String getExistingEmail(String email, BindingResult result);
-    String sendPasswordResetCode(String email, BindingResult result);
+    Map<String, Object> login(AuthenticationRequest request, BindingResult bindingResult);
+    Map<String, Object> getUserByToken();
+    String getExistingEmail(String email, BindingResult bindingResult);
+    String sendPasswordResetCode(String email, BindingResult bindingResult);
     AuthUserProjection getUserByPasswordResetCode(String code);
-    String passwordReset(String email, String password, String password2, BindingResult result);
-    String currentPasswordReset(String currentPassword, String password, String password2, BindingResult result);
+    String passwordReset(String email, String password, String password2, BindingResult bindingResult);
+    String currentPasswordReset(String currentPassword, String password, String password2, BindingResult bindingResult);
 }
