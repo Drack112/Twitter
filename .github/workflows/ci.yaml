@@ -71,7 +71,7 @@ jobs:
 
       - name: Start Config Service
         run: |
-          docker run -d --name config-server -p 8888:8888 config-service:latestt
+          docker run -d --name config-server -p 8888:8888 config-service:latest
 
       - name: Check Config Service Logs
         if: failure()
