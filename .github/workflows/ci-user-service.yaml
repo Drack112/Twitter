@@ -122,15 +122,6 @@ jobs:
         run: mvn dependency:go-offline -B
 
       - name: Run tests
-        env:
-          SPRING_PROFILES_ACTIVE: test
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/user-test
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: root
-          SPRING_KAFKA_BOOTSTRAP_SERVERS: localhost:9092
-          SPRING_RABBITMQ_HOST: localhost
-          SPRING_EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://localhost:8761/eureka
-          CONFIG_SERVER_URL: http://localhost:8888
         run: mvn test -B
 
       - name: Stop Config Service
