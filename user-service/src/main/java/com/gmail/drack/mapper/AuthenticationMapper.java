@@ -22,6 +22,10 @@ public class AuthenticationMapper {
     private final ModelMapper modelMapper;
     private final AuthenticationService authenticationService;
 
+    public AuthenticationResponse getUserByToken() {
+        return getAuthenticationResponse(authenticationService.getUserByToken());
+    }
+
     public AuthenticationResponse login(AuthenticationRequest request, BindingResult result) {
         return getAuthenticationResponse(authenticationService.login(request, result));
     }
