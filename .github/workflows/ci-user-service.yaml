@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Pipeline for User-Service
 
 on:
   push:
@@ -45,6 +45,11 @@ jobs:
           KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
           KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+      zipkin:
+        image: openzipkin/zipkin
+        ports:
+          - 9411:9411
+
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -73,6 +78,12 @@ jobs:
           psql -h localhost -U postgres -c "CREATE DATABASE \"user\";"
           psql -h localhost -U postgres -c "CREATE DATABASE \"user-test\";"
 
+      - name: Run SQL Script
+        env:
+          PGPASSWORD: root
+        run: |
+          psql -h localhost -U postgres -d user-test -f user_service/src/main/resources/db/migration/V1__Create_users_table.sql
+
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
@@ -80,6 +91,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
+      - name: Build Eureka Service
+        run: |
+          cd eureka-service
+          mvn clean package -DskipTests
+          docker build -t eureka-service:latest .
+
+      - name: Start eureka Service
+        run: |
+          docker run -d --name eureka-server -p 8761:8761 eureka-service:latest
 
       - name: Build Config Service
         run: |
@@ -90,6 +111,9 @@ jobs:
       - name: Start Config Service
         run: |
           docker run -d --name config-server -p 8888:8888 config-service:latest
+        env:
+          EUREKA_HOST: localhost
+          ZIPKIN_HOST: localhost
 
       - name: Check Config Service Logs
         if: failure()
