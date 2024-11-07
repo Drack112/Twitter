@@ -136,6 +136,30 @@ services:
       - zipkin
       - eureka-server
 
+  user-service:
+    build:
+      context: user-service
+    container_name: user-service
+    hostname: user-service
+    environment:
+      EUREKA_HOST: eureka-server
+      CONFIG_SERVER_HOST: config-server
+      DATASOURCE_HOST: postgres
+      ZIPKIN_HOST: zipkin
+      RABBITMQ_HOST: rabbitmq
+    ports:
+      - "8001:8001"
+    networks:
+      - postgres
+      - spring
+    depends_on:
+      - postgres
+      - zipkin
+      - rabbitmq
+      - broker
+      - eureka-server
+      - config-server
+
 networks:
   postgres:
     driver: bridge
