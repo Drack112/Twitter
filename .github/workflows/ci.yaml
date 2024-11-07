@@ -20,11 +20,6 @@ jobs:
         ports:
           - 5432:5432
 
-      zipkin:
-        image: openzipkin/zipkin
-        ports:
-          - 9411:9411
-
       rabbitmq:
         image: rabbitmq:3.9.11-management-alpine
         ports:
@@ -49,11 +44,6 @@ jobs:
           KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
           KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
           KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-      eureka:
-        image: springcloud/eureka
-        ports:
-          - 8761:8761
 
     steps:
       - name: Check out code
@@ -81,10 +71,7 @@ jobs:
 
       - name: Start Config Service
         run: |
-          docker run -d --name config-server -p 8888:8888 config-service:latest
-        env:
-          EUREKA_HOST: localhost
-          ZIPKIN_HOST: localhost
+          docker run -d --name config-server -p 8888:8888 config-service:latestt
 
       - name: Check Config Service Logs
         if: failure()
