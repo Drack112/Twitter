@@ -1,32 +1,81 @@
-server:
-  port: 8001
-spring:
-  application:
-    name: user-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/user-test
-    username: postgres
-    password: root
-    driverClassName: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:sql-test/clear-user-db.sql, classpath:sql-test/populate-user-db.sql
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: user-test
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-    fetch-registry: true
-    register-with-eureka: true
-  instance:
-    hostname: localhost
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: user-test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
+        options: >
+          --health-cmd "pg_isready -U postgres -d user-test || exit 1"
+          --health-interval 10s
+          --health-retries 5
+          --health-timeout 5s
+
+      kafka:
+        image: bitnami/kafka:latest
+        env:
+          KAFKA_BROKER_ID: 1
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          ALLOW_PLAINTEXT_LISTENER: "yes"
+        ports:
+          - 9092:9092
+
+      zookeeper:
+        image: bitnami/zookeeper:latest
+        ports:
+          - 2181:2181
+
+      eureka:
+        image: springcloud/eureka:latest
+        ports:
+          - 8761:8761
+        options: >
+          --health-cmd "curl -f http://localhost:8761/eureka/apps || exit 1"
+          --health-interval 10s
+          --health-retries 5
+          --health-start-period 20s
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install dependencies
+        run: mvn dependency:go-offline -B
+
+      - name: Run tests
+        env:
+          SPRING_PROFILES_ACTIVE: test
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/user-test
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: root
+          SPRING_KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+          EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://localhost:8761/eureka
+        run: mvn test -B
