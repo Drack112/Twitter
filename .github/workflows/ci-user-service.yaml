@@ -78,12 +78,6 @@ jobs:
           psql -h localhost -U postgres -c "CREATE DATABASE \"user\";"
           psql -h localhost -U postgres -c "CREATE DATABASE \"user-test\";"
 
-      - name: Run SQL Script
-        env:
-          PGPASSWORD: root
-        run: |
-          psql -h localhost -U postgres -d user-test -f user-service/src/main/resources/db/migration/V1__Create_users_table.sql
-
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
