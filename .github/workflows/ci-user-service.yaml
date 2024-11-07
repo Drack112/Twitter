@@ -3,7 +3,7 @@ name: CI Pipeline for User-Service
 on:
   push:
     branches:
-      - feat/github-ci
+      - master
   pull_request:
 
 jobs:
