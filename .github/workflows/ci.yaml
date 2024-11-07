@@ -55,6 +55,24 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432; then
+              echo "PostgreSQL is ready"
+              break
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep 5
+          done
+
+      - name: Create Databases
+        env:
+          PGPASSWORD: root
+        run: |
+          psql -h localhost -U postgres -c "CREATE DATABASE \"user\";"
+          psql -h localhost -U postgres -c "CREATE DATABASE \"user-test\";"
+
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
