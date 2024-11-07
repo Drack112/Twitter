@@ -81,10 +81,26 @@ jobs:
 
       - name: Start Config Service
         run: |
-          docker run -d --name config-server -p 8888:8888 --network="host" config-service:latest
+          docker run -d --name config-server -p 8888:8888 config-service:latest
         env:
           EUREKA_HOST: localhost
           ZIPKIN_HOST: localhost
+
+      - name: Check Config Service Logs
+        if: failure()
+        run: docker logs config-server
+
+      - name: Wait for Config Service
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:8888/actuator/health | grep '"status":"UP"'; then
+              echo "Config Service is up!"
+              break
+            fi
+            echo "Waiting for Config Service..."
+            sleep 10
+          done
+        shell: bash
 
       - name: Install dependencies
         run: mvn dependency:go-offline -B
