@@ -82,7 +82,7 @@ jobs:
         env:
           PGPASSWORD: root
         run: |
-          psql -h localhost -U postgres -d user-test -f user_service/src/main/resources/db/migration/V1__Create_users_table.sql
+          psql -h localhost -U postgres -d user-test -f user-service/src/main/resources/db/migration/V1__Create_users_table.sql
 
       - name: Cache Maven packages
         uses: actions/cache@v2
