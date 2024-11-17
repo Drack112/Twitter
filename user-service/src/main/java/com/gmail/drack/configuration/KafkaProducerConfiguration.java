@@ -40,4 +40,9 @@ public class KafkaProducerConfiguration {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
 
+    @Bean
+    public KafkaTemplate<String, BlockUserEvent> kafkaBlockUserTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
 }
