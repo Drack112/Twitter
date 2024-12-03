@@ -16,6 +16,7 @@ import com.gmail.drack.commons.constants.PathConstants;
 import com.gmail.drack.commons.dto.HeaderResponse;
 import com.gmail.drack.commons.dto.response.user.UserResponse;
 import com.gmail.drack.dto.response.FollowerUserResponse;
+import com.gmail.drack.dto.response.UserProfileResponse;
 import com.gmail.drack.mapper.FollowerUserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,10 @@ public class FollowerUserController {
     @GetMapping(PathConstants.FOLLOW_OVERALL) // TODO add pagination
     public ResponseEntity<List<UserResponse>> overallFollowers(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(followerUserMapper.overallFollowers(userId));
+    }
+
+    @GetMapping(PathConstants.FOLLOW_PRIVATE)
+    public ResponseEntity<UserProfileResponse> processFollowRequestToPrivateProfile(@PathVariable("userId") Long  userId) {
+        return ResponseEntity.ok(followerUserMapper.processFollowRequestToPrivateProfile(userId));
     }
 }

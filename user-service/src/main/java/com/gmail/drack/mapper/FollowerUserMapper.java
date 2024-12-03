@@ -10,8 +10,10 @@ import com.gmail.drack.commons.dto.HeaderResponse;
 import com.gmail.drack.commons.dto.response.user.UserResponse;
 import com.gmail.drack.commons.mapper.BasicMapper;
 import com.gmail.drack.dto.response.FollowerUserResponse;
+import com.gmail.drack.dto.response.UserProfileResponse;
 import com.gmail.drack.repository.projection.BaseUserProjection;
 import com.gmail.drack.repository.projection.FollowerUserProjection;
+import com.gmail.drack.repository.projection.UserProfileProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 import com.gmail.drack.service.FollowerUserService;
 
@@ -45,5 +47,10 @@ public class FollowerUserMapper {
     public List<UserResponse> overallFollowers(Long userId) {
         List<BaseUserProjection> users = followerUserService.overallFollowers(userId);
         return basicMapper.convertToResponseList(users, UserResponse.class);
+    }
+
+    public UserProfileResponse processFollowRequestToPrivateProfile(Long userId) {
+        UserProfileProjection user = followerUserService.processFollowRequestToPrivateProfile(userId);
+        return basicMapper.convertToResponse(user, UserProfileResponse.class);
     }
 }

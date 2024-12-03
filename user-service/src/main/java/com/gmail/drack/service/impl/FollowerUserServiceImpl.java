@@ -14,6 +14,7 @@ import com.gmail.drack.repository.FollowerUserRepository;
 import com.gmail.drack.repository.UserRepository;
 import com.gmail.drack.repository.projection.BaseUserProjection;
 import com.gmail.drack.repository.projection.FollowerUserProjection;
+import com.gmail.drack.repository.projection.UserProfileProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 import com.gmail.drack.service.AuthenticationService;
 import com.gmail.drack.service.FollowerUserService;
@@ -89,5 +90,25 @@ public class FollowerUserServiceImpl implements FollowerUserService {
         userServiceHelper.validateUserProfile(userId);
         Long authUserId = authenticationService.getAuthenticatedUserId();
         return followerUserRepository.getSameFollowers(userId, authUserId, BaseUserProjection.class);
+    }
+
+    @Override
+    @Transactional
+    public UserProfileProjection processFollowRequestToPrivateProfile(Long userId) {
+        User user =userServiceHelper.getUserById(userId);
+        Long authUserId = authenticationService.getAuthenticatedUserId();
+        userServiceHelper.checkIsUserBlocked(user.getId(), authUserId);
+        boolean hasUserFollowRequest;
+
+        if (followerUserRepository.isFollowerRequest(user.getId(), authUserId)) {
+            followerUserRepository.removeFollowerRequest(authUserId, user.getId());
+            hasUserFollowRequest = false;
+        } else {
+            followerUserRepository.addFollowerRequest(authUserId, user.getId());
+            hasUserFollowRequest = true;
+        }
+        followerUserRepository.updateFollowerRequestsCount(hasUserFollowRequest, user.getId());
+        followRequestUserProducer.sendFollowRequestUserEvent(user, authUserId, hasUserFollowRequest);
+        return userRepository.getUserById(user.getId(), UserProfileProjection.class).get();
     }
 }

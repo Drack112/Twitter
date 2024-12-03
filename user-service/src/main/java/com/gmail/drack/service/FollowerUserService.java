@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.gmail.drack.repository.projection.BaseUserProjection;
 import com.gmail.drack.repository.projection.FollowerUserProjection;
+import com.gmail.drack.repository.projection.UserProfileProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 
 public interface FollowerUserService {
@@ -15,5 +16,6 @@ public interface FollowerUserService {
     Page<FollowerUserProjection> getFollowersRequest(Pageable pageable);
     Boolean processFollow(Long userId);
     List<BaseUserProjection> overallFollowers(Long userId);
+    UserProfileProjection processFollowRequestToPrivateProfile(Long userId);
 }
 
