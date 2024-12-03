@@ -87,4 +87,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT user.password FROM User user WHERE user.id = :userId")
     String getUserPasswordById(@Param("userId") Long userId);
+
+    @Modifying
+    @Query(value = "DELETE FROM subscribers WHERE subscriber_id = ?1 AND user_id = ?2", nativeQuery = true)
+    void unsubscribe(@Param("authUserId") Long authUserId, @Param("userId") Long userId);
 }   

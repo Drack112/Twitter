@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.gmail.drack.model.User;
+import com.gmail.drack.repository.projection.FollowerUserProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 
 @Repository
@@ -128,4 +129,11 @@ public interface FollowerUserRepository extends JpaRepository<User, Long> {
             AND followerRequest.id = :authUserId
             """)
     boolean isFollowerRequest(@Param("userId") Long userId, @Param("authUserId") Long authUserId);
+
+     @Query(value = """
+            SELECT *, users.full_name as fullName FROM users
+            LEFT JOIN user_follower_requests ufr ON users.id = ufr.follower_id
+            WHERE ufr.user_id = :userId
+            """, nativeQuery = true)
+    Page<FollowerUserProjection> getFollowerRequests(@Param("userId") Long userId, Pageable pageable);
 }

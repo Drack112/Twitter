@@ -22,4 +22,28 @@ public class ProducerMapper {
         blockUserEvent.setUserBlocked(hasUserBlocked);
         return blockUserEvent;
     }
+
+    public FollowRequestUserEvent toFollowRequestUserEvent(User user, boolean hasUserFollowRequest) {
+        FollowRequestUserEvent followRequestUserEvent = basicMapper.convertToResponse(user, FollowRequestUserEvent.class);
+        followRequestUserEvent.setUserFollowRequest(hasUserFollowRequest);
+        return followRequestUserEvent;
+    }
+
+    public FollowUserNotificationEvent toUserNotificationEvent(User authUser, User notifiedUser) {
+        return FollowUserNotificationEvent.builder()
+                .user(toUserDto(authUser))
+                .userToFollow(toUserDto(notifiedUser))
+                .notifiedUser(toUserDto(notifiedUser))
+                .build();
+    }
+
+    public FollowUserEvent toFollowUserEvent(User user, boolean hasUserFollowed) {
+        FollowUserEvent followUserEvent = basicMapper.convertToResponse(user, FollowUserEvent.class);
+        followUserEvent.setUserFollow(hasUserFollowed);
+        return followUserEvent;
+    }
+
+    private UserNotificationDTO toUserDto(User user) {
+        return basicMapper.convertToResponse(user, UserNotificationDTO.class);
+    }
 }

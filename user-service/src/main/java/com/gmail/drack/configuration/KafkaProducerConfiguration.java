@@ -45,4 +45,19 @@ public class KafkaProducerConfiguration {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
 
+    @Bean
+    public KafkaTemplate<String, FollowUserEvent> kafkaFollowUserTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
+    @Bean
+    public KafkaTemplate<String, FollowUserNotificationEvent> kafkaFollowUserNotificationEventTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
+    @Bean
+    public KafkaTemplate<String, FollowRequestUserEvent> kafkaFollowRequestUserTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
 }
