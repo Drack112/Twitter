@@ -1,5 +1,7 @@
 package com.gmail.drack.mapper;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,7 @@ import com.gmail.drack.commons.dto.HeaderResponse;
 import com.gmail.drack.commons.dto.response.user.UserResponse;
 import com.gmail.drack.commons.mapper.BasicMapper;
 import com.gmail.drack.dto.response.FollowerUserResponse;
+import com.gmail.drack.repository.projection.BaseUserProjection;
 import com.gmail.drack.repository.projection.FollowerUserProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 import com.gmail.drack.service.FollowerUserService;
@@ -37,5 +40,10 @@ public class FollowerUserMapper {
 
     public Boolean processFollow(Long userId){
         return followerUserService.processFollow(userId);
+    }
+
+    public List<UserResponse> overallFollowers(Long userId) {
+        List<BaseUserProjection> users = followerUserService.overallFollowers(userId);
+        return basicMapper.convertToResponseList(users, UserResponse.class);
     }
 }

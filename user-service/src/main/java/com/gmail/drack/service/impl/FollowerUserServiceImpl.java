@@ -1,5 +1,7 @@
 package com.gmail.drack.service.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import com.gmail.drack.broker.producer.FollowUserProducer;
 import com.gmail.drack.model.User;
 import com.gmail.drack.repository.FollowerUserRepository;
 import com.gmail.drack.repository.UserRepository;
+import com.gmail.drack.repository.projection.BaseUserProjection;
 import com.gmail.drack.repository.projection.FollowerUserProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 import com.gmail.drack.service.AuthenticationService;
@@ -78,5 +81,13 @@ public class FollowerUserServiceImpl implements FollowerUserService {
         }
 
         return false;
+    }
+
+    @Override
+    @Transactional
+    public List<BaseUserProjection> overallFollowers(Long userId) {
+        userServiceHelper.validateUserProfile(userId);
+        Long authUserId = authenticationService.getAuthenticatedUserId();
+        return followerUserRepository.getSameFollowers(userId, authUserId, BaseUserProjection.class);
     }
 }

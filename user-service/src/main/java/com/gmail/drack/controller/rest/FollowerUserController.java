@@ -51,4 +51,8 @@ public class FollowerUserController {
         return ResponseEntity.ok(followerUserMapper.processFollow(userId));
     }
 
+    @GetMapping(PathConstants.FOLLOW_OVERALL) // TODO add pagination
+    public ResponseEntity<List<UserResponse>> overallFollowers(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(followerUserMapper.overallFollowers(userId));
+    }
 }
