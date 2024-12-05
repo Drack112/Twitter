@@ -18,5 +18,6 @@ public interface FollowerUserService {
     List<BaseUserProjection> overallFollowers(Long userId);
     UserProfileProjection processFollowRequestToPrivateProfile(Long userId);
     String acceptFollowRequest(Long userId);
+    String declineFollowRequest(Long userId);
 }
 

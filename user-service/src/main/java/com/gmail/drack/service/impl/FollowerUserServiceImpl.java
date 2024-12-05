@@ -131,4 +131,18 @@ public class FollowerUserServiceImpl implements FollowerUserService {
 
         return String.format(UserSuccessMessage.USER_ACCEPTED, userId);
     }
+
+    @Override
+    @Transactional
+    public String declineFollowRequest(Long userId) {
+        User user = userServiceHelper.getUserById(userId);
+        User authUser = authenticationService.getAuthenticatedUser();
+
+        followerUserRepository.removeFollowerRequest(user.getId(), authUser.getId());
+        followerUserRepository.updateFollowerRequestsCount(false, user.getId());
+
+        followRequestUserProducer.sendFollowRequestUserEvent(user, authUser.getId(), false);
+        
+        return String.format(UserSuccessMessage.USER_DECLINED, userId);
+    }
 }

@@ -64,4 +64,9 @@ public class FollowerUserController {
     public ResponseEntity<String> acceptFollowRequest(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(followerUserMapper.acceptFollowRequest(userId));
     }
+
+    @GetMapping(PathConstants.FOLLOW_DECLINE)
+    public ResponseEntity<String> declineFollowRequest(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(followerUserMapper.declineFollowRequest(userId));
+    }
 }

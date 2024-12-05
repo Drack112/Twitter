@@ -57,4 +57,8 @@ public class FollowerUserMapper {
     public String acceptFollowRequest(Long userId) {
         return followerUserService.acceptFollowRequest(userId);
     }
+
+    public String declineFollowRequest(Long userId) {
+        return followerUserService.declineFollowRequest(userId);
+    }
 }
