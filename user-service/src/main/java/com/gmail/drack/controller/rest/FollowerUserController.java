@@ -2,8 +2,6 @@ package com.gmail.drack.controller.rest;
 
 import java.util.List;
 
-import javax.print.attribute.standard.PageRanges;
-
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,5 +58,10 @@ public class FollowerUserController {
     @GetMapping(PathConstants.FOLLOW_PRIVATE)
     public ResponseEntity<UserProfileResponse> processFollowRequestToPrivateProfile(@PathVariable("userId") Long  userId) {
         return ResponseEntity.ok(followerUserMapper.processFollowRequestToPrivateProfile(userId));
+    }
+
+    @GetMapping(PathConstants.FOLLOW_ACCEPT)
+    public ResponseEntity<String> acceptFollowRequest(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(followerUserMapper.acceptFollowRequest(userId));
     }
 }

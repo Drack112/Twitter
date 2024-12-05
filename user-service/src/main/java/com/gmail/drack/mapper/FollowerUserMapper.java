@@ -53,4 +53,8 @@ public class FollowerUserMapper {
         UserProfileProjection user = followerUserService.processFollowRequestToPrivateProfile(userId);
         return basicMapper.convertToResponse(user, UserProfileResponse.class);
     }
+
+    public String acceptFollowRequest(Long userId) {
+        return followerUserService.acceptFollowRequest(userId);
+    }
 }

@@ -17,5 +17,6 @@ public interface FollowerUserService {
     Boolean processFollow(Long userId);
     List<BaseUserProjection> overallFollowers(Long userId);
     UserProfileProjection processFollowRequestToPrivateProfile(Long userId);
+    String acceptFollowRequest(Long userId);
 }
 

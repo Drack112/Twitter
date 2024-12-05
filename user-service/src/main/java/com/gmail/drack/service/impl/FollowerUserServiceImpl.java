@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gmail.drack.broker.producer.FollowRequestUserProducer;
 import com.gmail.drack.broker.producer.FollowUserNotificationProducer;
 import com.gmail.drack.broker.producer.FollowUserProducer;
+import com.gmail.drack.constants.UserSuccessMessage;
 import com.gmail.drack.model.User;
 import com.gmail.drack.repository.FollowerUserRepository;
 import com.gmail.drack.repository.UserRepository;
@@ -110,5 +111,24 @@ public class FollowerUserServiceImpl implements FollowerUserService {
         followerUserRepository.updateFollowerRequestsCount(hasUserFollowRequest, user.getId());
         followRequestUserProducer.sendFollowRequestUserEvent(user, authUserId, hasUserFollowRequest);
         return userRepository.getUserById(user.getId(), UserProfileProjection.class).get();
+    }
+
+    @Override
+    @Transactional
+    public String acceptFollowRequest(Long userId) {
+        User user = userServiceHelper.getUserById(userId);
+        User authUser = authenticationService.getAuthenticatedUser();
+
+        followerUserRepository.removeFollowerRequest(user.getId(), authUser.getId());
+        followerUserRepository.updateFollowerRequestsCount(false, user.getId());
+        followerUserRepository.follow(user.getId(), authUser.getId());
+        followerUserRepository.updateFollowingCount(true, user.getId());
+        followerUserRepository.updateFollowersCount(true, authUser.getId());
+        followRequestUserProducer.sendFollowRequestUserEvent(user, authUser.getId(), false);
+        followUserProducer.sendFollowUserEvent(user, authUser.getId(), true);
+
+        followUserProducer.sendFollowUserEvent(user, authUser.getId(), true);
+
+        return String.format(UserSuccessMessage.USER_ACCEPTED, userId);
     }
 }
