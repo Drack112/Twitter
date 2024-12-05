@@ -1,11 +1,5 @@
 package com.gmail.drack.mapper;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-
 import com.gmail.drack.commons.dto.HeaderResponse;
 import com.gmail.drack.commons.dto.response.user.UserResponse;
 import com.gmail.drack.commons.mapper.BasicMapper;
@@ -16,12 +10,18 @@ import com.gmail.drack.repository.projection.FollowerUserProjection;
 import com.gmail.drack.repository.projection.UserProfileProjection;
 import com.gmail.drack.repository.projection.UserProjection;
 import com.gmail.drack.service.FollowerUserService;
-
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class FollowerUserMapper {
+
     private final BasicMapper basicMapper;
     private final FollowerUserService followerUserService;
 
@@ -36,11 +36,11 @@ public class FollowerUserMapper {
     }
 
     public HeaderResponse<FollowerUserResponse> getFollowerRequests(Pageable pageable) {
-        Page<FollowerUserProjection> followers = followerUserService.getFollowersRequest(pageable);
+        Page<FollowerUserProjection> followers = followerUserService.getFollowerRequests(pageable);
         return basicMapper.getHeaderResponse(followers, FollowerUserResponse.class);
     }
 
-    public Boolean processFollow(Long userId){
+    public Boolean processFollow(Long userId) {
         return followerUserService.processFollow(userId);
     }
 

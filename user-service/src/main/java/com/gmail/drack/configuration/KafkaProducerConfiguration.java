@@ -34,16 +34,12 @@ public class KafkaProducerConfiguration {
     public KafkaTemplate<String, UpdateUserEvent> kafkaUpdateUserTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
-    
-    @Bean
-    public KafkaTemplate<String, SendEmailEvent> kafkaSendEmailTemplate() {
-        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
-    }
 
     @Bean
     public KafkaTemplate<String, BlockUserEvent> kafkaBlockUserTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
+
 
     @Bean
     public KafkaTemplate<String, FollowUserEvent> kafkaFollowUserTemplate() {
@@ -57,6 +53,11 @@ public class KafkaProducerConfiguration {
 
     @Bean
     public KafkaTemplate<String, FollowRequestUserEvent> kafkaFollowRequestUserTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
+    @Bean
+    public KafkaTemplate<String, SendEmailEvent> kafkaSendEmailTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
 

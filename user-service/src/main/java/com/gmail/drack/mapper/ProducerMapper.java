@@ -1,12 +1,10 @@
 package com.gmail.drack.mapper;
+
 import com.gmail.drack.commons.event.*;
 import com.gmail.drack.commons.mapper.BasicMapper;
 import com.gmail.drack.model.User;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Component;
-
 
 @Component
 @RequiredArgsConstructor
